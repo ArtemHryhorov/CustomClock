@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ClockView">
+        <attr name="textSize" format="dimension"/>
+        <attr name="timeZone" format="enum">
+            <enum name="PDT" value="1" />
+            <enum name="MDT" value="2" />
+            <enum name="CDT" value="3" />
+            <enum name="EDT" value="4" />
+            <enum name="RIO" value="5" />
+            <enum name="UTC" value="6" />
+            <enum name="BST" value="7" />
+            <enum name="CEST" value="8"  />
+            <enum name="MSK" value="9" />
+            <enum name="DUBAI" value="10" />
+            <enum name="IST" value="11" />
+            <enum name="CST" value="12" />
+            <enum name="JST" value="13" />
+            <enum name="AEST" value="14" />
+            <enum name="NZST" value="15" />
+        </attr>
+    </declare-styleable>
+
+</resources>
