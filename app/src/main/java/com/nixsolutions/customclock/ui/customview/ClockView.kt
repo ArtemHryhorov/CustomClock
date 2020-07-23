@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
@@ -30,6 +29,7 @@ class ClockView @JvmOverloads constructor (
     private var radius = size / 2f
     private var timeZone = DEFAULT_TIMEZONE
     private var textSize = DEFAULT_TEXT_SIZE
+    private var isViewActive: Boolean = true
     private lateinit var cachedBitmap: Bitmap
 
     init {
@@ -44,13 +44,14 @@ class ClockView @JvmOverloads constructor (
             val cacheCanvas = Canvas(cachedBitmap)
             drawClockBody(cacheCanvas)
             drawClockBorders(cacheCanvas)
-            textTimeZone(cacheCanvas)
             clockTime.isInitialDrawing = false
         }
 
         drawCachedBodyAndHands(canvas)
         clockTime.updateDate()
-        postInvalidateDelayed(DELAY_MILLISECONDS)
+        if (isViewActive) {
+            postInvalidateDelayed(DELAY_MILLISECONDS)
+        }
     }
 
     @SuppressLint("DrawAllocation")
@@ -63,11 +64,15 @@ class ClockView @JvmOverloads constructor (
         clockTime.reset()
     }
 
+    fun setTimezone(timezoneValue: Int) {
+        clockTime.apply { initializeDate(this.getTimeZone(timezoneValue + 1).first) }
+    }
+
     private fun getAttrs(attrs: AttributeSet?) {
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ClockView, 0, 0)
         timeZone = clockTime.getTimeZone(
             typedArray.getInt(R.styleable.ClockView_timeZone, DEFAULT_TIMEZONE_KEY)
-        )
+        ).first
         textSize = typedArray.getDimension(R.styleable.ClockView_textSize, DEFAULT_TEXT_SIZE)
     }
 
@@ -132,15 +137,6 @@ class ClockView @JvmOverloads constructor (
             stopY,
             paint
         )
-    }
-
-    private fun textTimeZone(canvas: Canvas) {
-        paint.color = Color.BLACK
-        paint.style = Paint.Style.FILL
-        paint.textSize = textSize
-        paint.strokeWidth = 2f
-
-        canvas.drawText(timeZone, size * 0.55f, size * 0.525f, paint)
     }
 
     companion object {
